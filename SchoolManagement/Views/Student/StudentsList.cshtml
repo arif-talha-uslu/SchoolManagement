@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SchoolManagement.Models.Entities.Student>
+@{
+    ViewData["Title"] = "StudentsList";
+}
+
+<h1>Students List</h1>
+
+<div class="w-50 p-4 my-3">
+    <h3>Add Student</h3>
+    <form asp-action="AddStudent" asp-controller="Student" method="post">
+        <label>Student Name</label>
+        <input type="text" class="form-control" name="StudentName" required />
+
+        <label>Student Surname</label>
+        <input type="text" class="form-control" name="StudentSName" required />
+
+        <input type="submit" class="btn btn-outline-primary mt-2" value="ADD" />
+    </form>
+</div>
+
+<hr class="content-divider" />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Student Name
+            </th>
+            <th>
+                Student Surname
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.StudentName
+                </td>
+
+                <td>
+                    @item.StudentSName
+                </td>
+
+                <td>
+                    <form asp-action="DeleteStudent" asp-controller="Student" method="post">
+                        <input type="hidden" name="id" value="@item.StudentId"/>
+                        <input type="submit" value="DELETE" class="btn btn-outline-danger"/>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
