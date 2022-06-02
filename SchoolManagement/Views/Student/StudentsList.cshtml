@@ -1,24 +1,11 @@
 ﻿@model IEnumerable<SchoolManagement.Models.Entities.Student>
 @{
-    ViewData["Title"] = "StudentsList";
+    ViewData["Title"] = "Students List";
 }
 
 <h1>Students List</h1>
 
-<div class="w-50 p-4 my-3">
-    <h3>Add Student</h3>
-    <form asp-action="AddStudent" asp-controller="Student" method="post">
-        <label>Student Name</label>
-        <input type="text" class="form-control" name="StudentName" required />
-
-        <label>Student Surname</label>
-        <input type="text" class="form-control" name="StudentSName" required />
-
-        <input type="submit" class="btn btn-outline-primary mt-2" value="ADD" />
-    </form>
-</div>
-
-<hr class="content-divider" />
+<a href="/Student/AddStudent" class="btn btn-outline-success">Add New Student</a>
 
 <table class="table table-bordered">
     <thead>
@@ -29,7 +16,8 @@
             <th>
                 Student Surname
             </th>
-            <th></th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -43,14 +31,111 @@
                 <td>
                     @item.StudentSName
                 </td>
-
                 <td>
-                    <form asp-action="DeleteStudent" asp-controller="Student" method="post">
-                        <input type="hidden" name="id" value="@item.StudentId"/>
-                        <input type="submit" value="DELETE" class="btn btn-outline-danger"/>
-                    </form>
+                    <!-- Button trigger modal -->
+                    <a class="btn btn-outline-warning" data-toggle="modal" data-target="#exampleModal2-@item.StudentId">
+                        UPDATE
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal2-@item.StudentId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Student</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h1>UpdateStudent</h1>
+
+                                    <h4>Student</h4>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <form action="/Student/UpdateStudent" method="post">
+
+                                                <input type="hidden" name="StudentId" value="@item.StudentId" /> @*for update process, we need this key*@
+
+                                                <div class="form-group">
+                                                    <label class="control-label">Student Name</label>
+                                                    <input name="StudentName" class="form-control" value="@item.StudentName" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label">Student Surname</label>
+                                                    <input name="StudentSName" class="form-control" value="@item.StudentSName" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer text-light">
+                                    <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <a class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal1-@item.StudentId">
+                        DELETE
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal1-@item.StudentId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Student will be deleted. Are you sure?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Student will be deleted. Are you sure?
+                                </div>
+                                <div class="modal-footer text-light">
+                                    <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                                    <a onclick="Delete(@item.StudentId)" class="btn btn-danger">DELETE</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function Delete(stdid) {
+            $.ajax({
+                url: "/Student/DeleteStudent",
+                type: "POST",
+                data: { id: stdid },
+                success: function(data) {
+                    window.location.reload(true);
+                },
+                error: function(data) {
+                    alert('An error occurred')
+                }
+            });
+        }
+
+    </script>
+}
+
+
+
+

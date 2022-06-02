@@ -16,6 +16,11 @@ namespace SchoolManagement.Controllers
             }
         }
 
+        public IActionResult AddStudent()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult AddStudent(Student student)
         {
@@ -24,7 +29,7 @@ namespace SchoolManagement.Controllers
                 db.Students.Add(student);
                 db.SaveChanges();
 
-                return View("StudentsList", db.Students.ToList());
+                return RedirectToAction("StudentsList", db.Students.ToList());
             }
         }
 
@@ -37,6 +42,25 @@ namespace SchoolManagement.Controllers
                 {
                     var studentwillbedeleted = db.Students.Find(id);
                     db.Students.Remove(studentwillbedeleted);
+                    db.SaveChanges();
+                }
+                catch (System.Exception)
+                {
+                    return RedirectToAction("StudentsList", db.Students.ToList());
+                }
+
+                return RedirectToAction("StudentsList", db.Students.ToList());
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateStudent(Student student)
+        {
+            using (var db = new SchoolContext())
+            {
+                try
+                {
+                    db.Students.Update(student);
                     db.SaveChanges();
                 }
                 catch (System.Exception)
